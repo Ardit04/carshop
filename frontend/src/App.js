@@ -4,10 +4,11 @@ import CarList from './components/CarList';
 import CarForm from './components/CarForm';
 import CommentForm from './components/CommentForm';
 import CommentList from './components/CommentList';
-import CustomerList from './components/CustomerList';
-import CustomerForm from './components/CustomerForm';
+import LoginForm from './components/LoginForm';
+import SignupForm from './components/SignupForm';
 
 function App() {
+  // === CAR state ===
   const [editingCar, setEditingCar] = useState(null);
   const [refresh, setRefresh] = useState(false);
 
@@ -18,32 +19,18 @@ function App() {
   };
 
   // === COMMENT state ===
-  const [editingComment, setEditingComment] = useState(null);
-  const [refreshComments, setRefreshComments] = useState(0);
+  const [comments, setComments] = useState([]); // Shared state for comments
 
-  const handleEditComment = (comment) => setEditingComment(comment);
-  const handleCommentSuccess = () => {
-    setEditingComment(null);
-    setRefreshComments((prev) => prev + 1);
+  const handleCommentAdded = (newComment) => {
+    setComments((prevComments) => [newComment, ...prevComments]); // Add new comment to the list
   };
 
-  // === CUSTOMER state ===
-  const [editingCustomer, setEditingCustomer] = useState(null);
-  const [refreshCustomers, setRefreshCustomers] = useState(0);
-
-  const handleEditCustomer = (customer) => setEditingCustomer(customer);
-  const handleCustomerSuccess = () => {
-    setEditingCustomer(null);
-    setRefreshCustomers((prev) => prev + 1);
-  };
-
-  // 👇 KY `return` DUHET TË JETË BRENDA `App()`
   return (
     <Router>
-      <div className="App">
+      <div className="App p-4">
         <Routes>
           <Route
-            path="/car"
+            path="/cars"
             element={
               <>
                 <CarForm carToEdit={editingCar} onSuccess={handleSuccess} />
@@ -55,25 +42,17 @@ function App() {
             path="/comments"
             element={
               <>
-                <CommentForm commentToEdit={editingComment} onSuccess={handleCommentSuccess} />
-                <CommentList onEdit={handleEditComment} key={refreshComments} />
+                <CommentForm userId={1} onCommentAdded={handleCommentAdded} />
+                <CommentList userId={1} comments={comments} />
               </>
             }
           />
-          <Route
-            path="/customers"
-            element={
-              <>
-                <CustomerForm customerToEdit={editingCustomer} onSuccess={handleCustomerSuccess} />
-                <CustomerList onEdit={handleEditCustomer} key={refreshCustomers} />
-              </>
-            }
-          />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignupForm />} />
         </Routes>
       </div>
     </Router>
   );
 }
-
 
 export default App;

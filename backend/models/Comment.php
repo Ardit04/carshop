@@ -1,51 +1,48 @@
 <?php
 class Comment {
-    private $conn;
-    private $table = 'comments';
+    private $pdo;
 
-    public function __construct($db) {
-        $this->conn = $db;
+    public function __construct($pdo) {
+        $this->pdo = $pdo;
     }
 
-    public function getAll() {
-        $query = "SELECT * FROM {$this->table}";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-        return $stmt;
-    }
-
-    public function getById($id) {
-        $query = "SELECT * FROM {$this->table} WHERE id = ?";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
+    // Create a comment
     public function create($data) {
-        $query = "INSERT INTO {$this->table} (car_id, customer_id, comment) VALUES (?, ?, ?)";
-        $stmt = $this->conn->prepare($query);
-        return $stmt->execute([
-            $data['car_id'],
-            $data['customer_id'],
-            $data['comment']
-        ]);
+        $query = "INSERT INTO comments (user_id, comment) VALUES (:user_id, :comment)";
+        $stmt = $this->pdo->prepare($query);
+        
+        $stmt->bindParam(':user_id', $data['user_id']);
+        $stmt->bindParam(':comment', $data['text']); // Use 'text' from the input data
+
+        return $stmt->execute();
     }
 
-    public function update($id, $data) {
-        $query = "UPDATE {$this->table} SET car_id = ?, customer_id = ?, comment = ? WHERE id = ?";
-        $stmt = $this->conn->prepare($query);
-        return $stmt->execute([
-            $data['car_id'],
-            $data['customer_id'],
-            $data['comment'],
-            $id
-        ]);
+    // Read comments for a user
+    public function read($user_id) {
+        $query = "SELECT * FROM comments WHERE user_id = :user_id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Update comment
+    public function update($id, $text) {
+        $query = "UPDATE comments SET comment = :comment WHERE id = :id";
+        $stmt = $this->pdo->prepare($query);
+        
+        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':comment', $text);
+
+        return $stmt->execute();
+    }
+
+    // Delete comment
     public function delete($id) {
-        $query = "DELETE FROM {$this->table} WHERE id = ?";
-        $stmt = $this->conn->prepare($query);
-        return $stmt->execute([$id]);
+        $query = "DELETE FROM comments WHERE id = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':id', $id);
+        return $stmt->execute();
     }
 }
 ?>

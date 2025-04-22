@@ -6,26 +6,16 @@ header("Content-Type: application/json");
 require_once '../../db/db.php';
 require_once '../../models/Comment.php';
 
+parse_str($_SERVER['QUERY_STRING'], $params);
+$id = $params['id'] ?? null;
 $data = json_decode(file_get_contents("php://input"), true);
 
-if (!$data || !isset($data['id']) || !isset($data['comment'])) {
-    echo json_encode(["success" => false, "message" => "Invalid input"]);
+if (!$id || !$data) {
+    echo json_encode(['error' => 'Missing ID or data']);
     exit;
 }
 
-$id = intval($data['id']);
-$comment = $data['comment'];
+$comment = new Comment($pdo);
+$success = $comment->update($id, $data['text']);
 
-if (!isset($conn)) {
-    echo json_encode(["success" => false, "message" => "Database connection not found"]);
-    exit;
-}
-
-$stmt = $conn->prepare("UPDATE comments SET comment = ? WHERE id = ?");
-$stmt->bind_param("si", $comment, $id);
-
-if ($stmt->execute()) {
-    echo json_encode(["success" => true]);
-} else {
-    echo json_encode(["success" => false, "message" => "Failed to update comment"]);
-}
+echo json_encode(['success' => $success]);

@@ -1,39 +1,57 @@
 import React, { useState } from 'react';
 
-export default function CommentForm({ carId, customerId, onCommentAdded }) {
-  const [comment, setComment] = useState('');
+const CommentForm = ({ userId, onCommentAdded }) => {
+    const [comment, setComment] = useState('');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-    const response = await fetch('http://localhost/carshop/comments/create_comment.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ car_id: carId, customer_id: customerId, comment }),
-    });
+        const newComment = { user_id: userId, text: comment };
+        console.log('Data being sent to the server:', newComment); // Debug data
 
-    const data = await response.json();
-    if (data.message) {
-      setComment('');
-      onCommentAdded();
-    } else {
-      console.error(data.error);
-    }
-  };
+        try {
+            const response = await fetch('http://localhost/carshop/backend/api/comments/create_comment.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newComment),
+            });
 
-  return (
-    <form onSubmit={handleSubmit} className="p-3 border rounded">
-      <textarea
-        value={comment}
-        onChange={(e) => setComment(e.target.value)}
-        placeholder="Write your comment..."
-        className="w-full p-2 border rounded mb-2"
-        rows={3}
-        required
-      />
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
-        Post Comment
-      </button>
-    </form>
-  );
-}
+            const data = await response.json();
+            console.log('Server response:', data);
+
+            if (data.success) {
+                alert(data.message);
+                setComment(''); // Clear the input field
+
+                // Notify parent of the new comment
+                if (onCommentAdded) {
+                    onCommentAdded({ id: data.comment_id, text: comment });
+                }
+            } else {
+                alert(data.message || 'Failed to create comment.');
+            }
+        } catch (error) {
+            console.error('Error while submitting the comment:', error);
+            alert('An error occurred while connecting to the server.');
+        }
+    };
+
+    return (
+        <div>
+            <h3>Add Comment</h3>
+            <form onSubmit={handleSubmit}>
+                <textarea
+                    placeholder="Enter your comment"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    required
+                />
+                <button type="submit">Submit Comment</button>
+            </form>
+        </div>
+    );
+};
+
+export default CommentForm;
