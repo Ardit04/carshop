@@ -3,16 +3,16 @@ import { getComments } from '../api/commentService'; // Correct import
 
 const CommentList = ({ userId, newComment }) => {
   const [comments, setComments] = useState([]);
-
+console.log('CommentList component rendered', userId); // Debugging line
   useEffect(() => {
     if (userId) {
       const fetchComments = async () => {
         try {
-          const data = await getComments(userId);
+          const data = await getComments(7); // Fetch comments for the user ARDIT
+          
           console.log('Fetched comments:', data); // Debug the response
           setComments(data.comments || []); // Ensure comments is always an array
         } catch (error) {
-          console.error('Error fetching comments:', error);
           setComments([]); // Default to an empty array on error
         }
       };

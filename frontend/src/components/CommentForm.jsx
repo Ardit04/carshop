@@ -5,8 +5,8 @@ const CommentForm = ({ userId, onCommentAdded }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        const newComment = { user_id: userId, text: comment };
+//change the user_id to the one that is logged in and the car_id to the one that is being viewed ARDIT
+        const newComment = { user_id: 7, text: comment, car_id: 7 }; // Assuming car_id is fixed for now
         console.log('Data being sent to the server:', newComment); // Debug data
 
         try {
