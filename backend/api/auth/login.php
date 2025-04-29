@@ -24,6 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user) {
         if (password_verify($password, $user['password'])) {
+            session_start();
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['role'] = $user['role'];
+
             echo json_encode([
                 "status" => "success",
                 "message" => "Login successful",
@@ -40,6 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(["status" => "error", "message" => "User not found"]);
     }
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'An error occurred']);
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
 }
 ?>

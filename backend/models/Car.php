@@ -5,7 +5,7 @@ class Car {
 
     public function __construct($db) {
         $this->conn = $db;
-    }
+}                                               
 
     public function getAll() {
         $query = "SELECT * FROM {$this->table}";

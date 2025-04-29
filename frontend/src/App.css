@@ -36,3 +36,40 @@
     transform: rotate(360deg);
   }
 }
+
+/* Navbar styles */
+nav {
+  padding: 1rem;
+  background-color: #3b82f6; /* Tailwind's blue-500 */
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav h1 {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  margin: 0 10px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #bfdbfe; /* Tailwind's blue-200 */
+}
