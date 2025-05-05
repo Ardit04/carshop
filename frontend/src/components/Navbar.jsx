@@ -1,11 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // shto useNavigate
 import '../App.css';
 
 const Navbar = ({ user, onLogout }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    onLogout();         // logout logjika që vjen nga props
+    navigate('/');      // redirect në homepage
+  };
+
   return (
     <nav className="p-4 bg-blue-500 text-white flex justify-between">
-      <h1 className="text-xl font-bold">CarShop</h1>
+      <Link to="/" className="text-xl font-bold no-underline">
+        CarShop
+      </Link>
       <ul className="flex space-x-4">
         <li><Link to="/">Home</Link></li>
         {user && user.role === 1 && <li><Link to="/customer">Cars</Link></li>}
@@ -16,7 +25,7 @@ const Navbar = ({ user, onLogout }) => {
             <li><Link to="/signup">Signup</Link></li>
           </>
         ) : (
-          <li><button onClick={onLogout}>Logout</button></li>
+          <li><button onClick={handleLogout}>Logout</button></li>
         )}
       </ul>
     </nav>

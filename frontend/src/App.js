@@ -3,11 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import CarList from './components/CarList';
-import CarForm from './components/CarForm';
-import CommentForm from './components/CommentForm';
 import CommentList from './components/CommentList';
 import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
+import CarManager from './components/CarManager';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -40,14 +39,20 @@ function App() {
         <Navbar user={user} onLogout={handleLogout} />
         <div className="p-4">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={
+              <>
+              <Home />
+              <CarList />
+              </>
+            } />
              <Route
               path="/customer"
               element={
                 user && user.role === 1 ? (
                   <>
                     <CarList/>
-                    <CommentForm/>
+                    
+                    
                   </>
                 ) : (
                   <Navigate to="/login" />
@@ -59,8 +64,10 @@ function App() {
               element={
                 user && user.role === 0 ? (
                   <>
-                    <CarForm />
+                    <CarManager />
                     <CommentList />
+                    
+                   
                   </>
                 ) : (
                   <Navigate to="/login" />
