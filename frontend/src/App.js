@@ -7,6 +7,7 @@ import CommentList from './components/CommentList';
 import LoginForm from './components/LoginForm';
 import SignupForm from './components/SignupForm';
 import CarManager from './components/CarManager';
+import Cart from './components/Cart'; // Import the Cart component
 
 function App() {
   const [user, setUser] = useState(null);
@@ -39,20 +40,21 @@ function App() {
         <Navbar user={user} onLogout={handleLogout} />
         <div className="p-4">
           <Routes>
-            <Route path="/" element={
-              <>
-              <Home />
-              <CarList />
-              </>
-            } />
-             <Route
+            <Route
+              path="/"
+              element={
+                <>
+                  <Home />
+                  <CarList user={user} /> {/* Pass the user prop */}
+                </>
+              }
+            />
+            <Route
               path="/customer"
               element={
                 user && user.role === 1 ? (
                   <>
-                    <CarList/>
-                    
-                    
+                    <CarList user={user} /> {/* Pass the user prop */}
                   </>
                 ) : (
                   <Navigate to="/login" />
@@ -66,9 +68,17 @@ function App() {
                   <>
                     <CarManager />
                     <CommentList />
-                    
-                   
                   </>
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                user ? (
+                  <Cart /> // Add the Cart component here
                 ) : (
                   <Navigate to="/login" />
                 )
