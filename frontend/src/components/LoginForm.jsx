@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 
 export default function LoginForm({ onLogin }) { // Accept onLogin as a prop
@@ -35,7 +36,7 @@ export default function LoginForm({ onLogin }) { // Accept onLogin as a prop
   return (
     <div>
       {!user ? (
-        <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-4 shadow-md rounded-xl space-y-3">
+        <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-4 shadow-md rounded-xl space-y-3 ">
           <h2 className="text-xl font-semibold">Login</h2>
           <input name="email" value={form.email} onChange={handleChange} type="email" placeholder="Email" className="w-full border p-2 rounded" required />
           <input name="password" value={form.password} onChange={handleChange} type="password" placeholder="Password" className="w-full border p-2 rounded" required />
